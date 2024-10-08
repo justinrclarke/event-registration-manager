@@ -1,6 +1,7 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import AppLayout from '@/Layouts/AppLayout.vue';
+import { BiCheckCircleFill } from "oh-vue-icons/icons";
 
 defineProps({ registrants: Array })
 </script>
@@ -36,13 +37,14 @@ defineProps({ registrants: Array })
                                 <div class="table-cell">{{ registrant.company_name }}</div>
                                 <div class="table-cell">{{ registrant.company_email }}</div>
                                 <div class="table-cell">{{ registrant.company_phone }}</div>
-                                <div class="table-cell">{{ registrant.checked_in }}</div>
-                                <div class="table-cell">{{ registrant.walk_in }}</div>
+                                <div class="table-cell">{{ registrant.checked_in ? "Yes" : "No" }} </div>
+                                <div class="table-cell">{{ registrant.walk_in ? "Yes" : "No" }} </div>
                                 <div class="table-cell uppercase font-bold text-red-500"><Link :href="route('registrations.show', registrant)">Print</Link></div>
                             </div>
                         </div>
                     </div>
                     <button class="mt-10 float-end uppercase bg-blue-500 p-2 rounded text-white font-bold">Import Registrations</button>
+                    <Link class="mt-10 mr-10 float-end uppercase bg-blue-950 p-2 rounded text-white font-bold" :href="route('registrations.create')">Register Walk In</Link>
                 </div>
             </div>
         </div>

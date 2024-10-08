@@ -24,7 +24,7 @@ class RegistrantController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('EditRegistrant');
     }
 
     /**
@@ -32,7 +32,11 @@ class RegistrantController extends Controller
      */
     public function store(StoreRegistrantRequest $request)
     {
-        //
+        $registrant = new Registrant();
+        $registrant->fill($request->toArray());
+        $registrant->save();
+
+        return to_route('registrations.index');
     }
 
     /**
@@ -40,7 +44,15 @@ class RegistrantController extends Controller
      */
     public function show(Registrant $registrant, $request)
     {
-        return Inertia::render('PrintRegistrant', ['registrant' => $registrant::where("id", $request)->get()]);
+       $r = $registrant::find($request);
+       // Since we are printing the badge,
+       // lets set check them in.
+       if ($r) {
+        $r->checked_in = 1;
+        $r->save();
+       }
+
+        return Inertia::render('PrintRegistrant', ['registrant' => $r]);
     }
 
     /**
@@ -48,7 +60,7 @@ class RegistrantController extends Controller
      */
     public function edit(Registrant $registrant)
     {
-        //
+        return Inertia::render('EditRegistrant', ['registrant' => $registrant]);
     }
 
     /**
