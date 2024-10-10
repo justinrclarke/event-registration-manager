@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRegistrantRequest;
 use App\Http\Requests\UpdateRegistrantRequest;
 use App\Models\Registrant;
+use Illuminate\Http\Request;
 use chillerlan\QRCode\QRCode;
-use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
-use function Termwind\render;
 
 class RegistrantController extends Controller
 {
@@ -83,4 +82,39 @@ class RegistrantController extends Controller
     {
         //
     }
+
+    public function fileUpload(Request $request)
+    {
+        // Validate the file input
+        $request->validate([
+            'file' => 'required|file|mimes:csv,txt|max:2048',  // Assuming CSV for simplicity
+        ]);
+
+        // Retrieve the file from the request
+        $file = $request->file('file');
+
+        // Open and read the file
+        $fileData = file($file->getRealPath());
+
+        // Parse the CSV or text data (assumes CSV in this example)
+        foreach ($fileData as $key => $line) {
+            if ($key === 0) continue;  // Skip header row if there's one
+
+            // Example: Parse CSV data by splitting the line
+            $row = str_getcsv($line);
+
+            $first_name = $row[1];
+            $last_name = $row[2];
+            $company_name = $row[7];
+            $company_email = $row[5];
+            $company_phone = $row[8];
+
+            // Use updateOrCreate to insert or update based on email
+            Registrant::updateOrCreate(['company_email' => $company_email], ['first_name' => $first_name, 'last_name' => $last_name, 'company_name' => $company_name, 'company_phone' => $company_phone]);
+        }
+
+        return response()->json(['message' => 'File processed successfully and registrations saved.']);
+    }
+
+
 }

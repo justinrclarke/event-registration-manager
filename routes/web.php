@@ -24,4 +24,5 @@ Route::middleware([
     })->name('dashboard');
 
     Route::resource('registrations', RegistrantController::class);
+    Route::post('registrations/file-upload', [RegistrantController::class, 'fileUpload'])->name('registrations.file-upload');
 });
