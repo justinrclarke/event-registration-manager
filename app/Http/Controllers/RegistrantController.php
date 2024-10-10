@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRegistrantRequest;
 use App\Http\Requests\UpdateRegistrantRequest;
 use App\Models\Registrant;
+use chillerlan\QRCode\QRCode;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
+use function Termwind\render;
 
 class RegistrantController extends Controller
 {
@@ -52,7 +54,10 @@ class RegistrantController extends Controller
         $r->save();
        }
 
-        return Inertia::render('PrintRegistrant', ['registrant' => $r]);
+       $url = "https://reecesupply.com";
+       $qrCode = (new QRCode())->render($url);
+
+        return Inertia::render('PrintRegistrant', ['registrant' => $r, 'qrcode' => $qrCode]);
     }
 
     /**
